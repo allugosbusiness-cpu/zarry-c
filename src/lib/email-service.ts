@@ -121,7 +121,7 @@ export async function sendNewContentNotification(
     <body>
       <div class="container">
         <div class="header">
-          <img src="${baseUrl}/images/zarry c logo.png" alt="Zarry C" class="logo" />
+          <img src="${baseUrl}/images/zarry-c-logo.png" alt="Zarry C" class="logo" />
           <div class="emoji">${emoji.split(" ")[0]}</div>
           <h1>Zarry C</h1>
         </div>
