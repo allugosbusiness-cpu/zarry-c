@@ -4,6 +4,7 @@ import { fetchLatestSpotifyReleases } from "@/lib/social/spotify";
 import { fetchLatestSoundCloudTracks } from "@/lib/social/soundcloud";
 import { getSubscribersForNotification, createNotificationEvent, markNotificationSent } from "@/lib/firebase/subscribers";
 import { getContentSnapshot, updateContentSnapshot, findNewContent } from "@/lib/firebase/content-tracker";
+import { sendBulkNotifications } from "@/lib/email-service";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -61,9 +62,12 @@ async function handleCheck() {
           const msg = video.description?.slice(0, 150) || `Latest from Zarry C — ${video.title}`;
           if (subs.length > 0) {
             const nid = await createNotificationEvent("music-release", title, msg, video.url);
+            const { sent, failed } = await sendBulkNotifications(
+              subs.map(s => ({ email: s.email, name: s.name })),
+              "music-release", title, msg, video.url
+            );
             await markNotificationSent(nid, subs.length);
-            results.push(`  → Emailed ${subs.length} subs about "${video.title}"`);
-            results.push(`  → Recipients: ${subs.map(s => s.email).join(", ")}`);
+            results.push(`  → Emailed ${sent}/${subs.length} subs (${failed} failed) about "${video.title}"`);
           }
         }
       } else {
@@ -80,9 +84,12 @@ async function handleCheck() {
           const msg = `"${release.title}" is out now on Spotify!`;
           if (subs.length > 0) {
             const nid = await createNotificationEvent("music-release", title, msg, release.url);
+            const { sent, failed } = await sendBulkNotifications(
+              subs.map(s => ({ email: s.email, name: s.name })),
+              "music-release", title, msg, release.url
+            );
             await markNotificationSent(nid, subs.length);
-            results.push(`  → Emailed ${subs.length} subs about "${release.title}"`);
-            results.push(`  → Recipients: ${subs.map(s => s.email).join(", ")}`);
+            results.push(`  → Emailed ${sent}/${subs.length} subs (${failed} failed) about "${release.title}"`);
           }
         }
       } else {
@@ -99,9 +106,12 @@ async function handleCheck() {
           const msg = `"${track.title}" is live on SoundCloud!`;
           if (subs.length > 0) {
             const nid = await createNotificationEvent("music-release", title, msg, track.url);
+            const { sent, failed } = await sendBulkNotifications(
+              subs.map(s => ({ email: s.email, name: s.name })),
+              "music-release", title, msg, track.url
+            );
             await markNotificationSent(nid, subs.length);
-            results.push(`  → Emailed ${subs.length} subs about "${track.title}"`);
-            results.push(`  → Recipients: ${subs.map(s => s.email).join(", ")}`);
+            results.push(`  → Emailed ${sent}/${subs.length} subs (${failed} failed) about "${track.title}"`);
           }
         }
       } else {

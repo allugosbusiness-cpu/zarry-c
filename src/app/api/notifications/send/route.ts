@@ -4,6 +4,7 @@ import {
   createNotificationEvent,
   markNotificationSent 
 } from "@/lib/firebase/subscribers";
+import { sendBulkNotifications } from "@/lib/email-service";
 
 export const dynamic = "force-dynamic";
 
@@ -39,14 +40,6 @@ export async function POST(request: NextRequest) {
     const subscribers = await getSubscribersForNotification(body.type);
     const recipientCount = subscribers.length;
 
-    if (recipientCount === 0) {
-      return NextResponse.json({
-        success: true,
-        message: "No subscribers found for this notification type",
-        recipientCount: 0,
-      });
-    }
-
     // Create notification event in Firestore
     const notificationId = await createNotificationEvent(
       body.type,
@@ -55,25 +48,43 @@ export async function POST(request: NextRequest) {
       body.link
     );
 
-    // Log the sent notification
-    await markNotificationSent(notificationId, recipientCount);
+    if (recipientCount === 0) {
+      await markNotificationSent(notificationId, 0);
+      return NextResponse.json({
+        success: true,
+        message: "No subscribers found for this notification type",
+        recipientCount: 0,
+      });
+    }
 
-    // Here you would integrate with an email service like SendGrid, Mailgun, etc.
-    // For now, we log what would be sent
+    // Actually send emails to subscribers
     console.log(`[NOTIFICATION] ${body.type}: "${body.title}"`);
     console.log(`[NOTIFICATION] Sending to ${recipientCount} subscribers`);
     console.log(`[NOTIFICATION] Email recipients:`, subscribers.map(s => s.email));
+
+    const { sent, failed } = await sendBulkNotifications(
+      subscribers.map(s => ({ email: s.email, name: s.name })),
+      body.type,
+      body.title,
+      body.message,
+      body.link
+    );
+
+    // Mark notification as sent
+    await markNotificationSent(notificationId, recipientCount);
 
     return NextResponse.json({
       success: true,
       notificationId,
       recipientCount,
+      sentCount: sent,
+      failedCount: failed,
       subscribersSample: subscribers.slice(0, 5).map(s => ({
         email: s.email,
         name: s.name,
         tier: s.tier,
       })),
-      message: `Notification queued for ${recipientCount} subscribers`,
+      message: `Notification sent to ${sent}/${recipientCount} subscribers${failed > 0 ? ` (${failed} failed)` : ""}`,
     });
   } catch (error) {
     console.error("[NOTIFICATION] Error:", error);

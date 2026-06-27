@@ -66,8 +66,8 @@ export function VideoThumbnail({ videoUrl, thumbnailUrl, title, className = "" }
 
     const onCanPlay = () => {
       if (clean) return;
-      // Seek to 0.2s to avoid potential black first frame
-      video.currentTime = 0.2;
+      // Seek to 0.23s to avoid potential black first frame
+      video.currentTime = 0.23;
     };
 
     const onSeeked = () => {

@@ -14,20 +14,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Justice Zari — Official Site | Music, Videos, Merch & Fan Club",
-  description: "Listen to Justice Zari's latest album, watch music videos, buy merch, join the fan club, book videography services, and license beats. Independent artist from Harare, Zimbabwe.",
-  keywords: ["Justice Zari", "JUSTICEZARI", "Zimbabwe music", "Afrobeat", "Hip-hop", "music artist", "videography", "beat marketplace", "fan club"],
+  title: "Zarry C — Official Site | Music, Videos, Merch & Beats",
+  description: "Listen to Justice Zari's latest albums, watch music videos, buy merch, join the fan club, book videography services, and license beats. Independent artist from Zimbabwe.",
+  keywords: ["Justice Zari", "Zarry C", "Zimbabwe music", "Afrobeat", "Hip-hop", "music artist", "zarryc", "beat marketplace", "buy beats"],
   openGraph: {
-    title: "Justice Zari — Official Site",
-    description: "Listen to Justice Zari's latest album, watch music videos, buy merch, join the fan club, and book videography services.",
-    url: "https://justicezari.com",
-    siteName: "JUSTICEZARI",
+    title: "Zarry C — Official Site",
+    description: "Listen to Zarry C's latest albums, watch music videos, buy merch, join the fan club, and book videography services, download content.",
+    url: "https://zarryc.com",
+    siteName: "Zarry C",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/zarry c logo.png",
         width: 1200,
         height: 630,
-        alt: "Justice Zari — Official Artist Site",
+        alt: "Zarry C — Official Artist Site",
       },
     ],
     locale: "en_US",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Justice Zari — Official Site",
+    title: "Zarry C — Official Site",
     description: "Listen to the latest album, watch videos, join the fan club.",
     images: ["/images/og-image.jpg"],
   },
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/images/zarry c logo.png",
+    icon: "/favicon-icon.png",
     apple: "/images/zarry c logo.png",
   },
 };

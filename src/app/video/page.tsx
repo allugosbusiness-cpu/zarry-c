@@ -62,7 +62,7 @@ export default function VideoPage({
       const onCanPlay = () => {
         if (captured) return;
         captured = true;
-        vid.currentTime = 0.2;
+        vid.currentTime = 0.23;
       };
 
       const onSeeked = () => {
