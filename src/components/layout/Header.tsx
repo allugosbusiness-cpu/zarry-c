@@ -47,14 +47,14 @@ export function Header() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-pink-500/20 group-hover:ring-pink-500/50 transition-all duration-300">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-pink-500/20 group-hover:ring-pink-500/50 transition-all duration-300">
               <Image src={artistInfo.logo} alt="ZARRY C" width={48} height={48} className="object-contain w-full h-full" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-white hidden sm:block group-hover:text-pink-400 transition-colors">
+            <span className="font-bold text-lg sm:text-xl tracking-tight text-white hidden sm:block group-hover:text-pink-400 transition-colors">
               ZARRY C
             </span>
           </Link>

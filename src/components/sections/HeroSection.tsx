@@ -101,7 +101,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-tight mb-4"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-tight mb-4"
             >
               Zarry C
             </motion.h1>
@@ -109,7 +109,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 leading-[1.1] tracking-tight mb-6"
+              className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 leading-[1.2] tracking-tight mb-6"
             >
               Listen. Watch. Join the inner circle.
             </motion.h2>
@@ -118,7 +118,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl sm:text-2xl text-white/40 font-light italic mb-8"
+              className="text-lg sm:text-xl md:text-2xl text-white/40 font-light italic mb-8"
             >
               &ldquo;{artistInfo.tagline}&rdquo;
             </motion.p>
@@ -155,7 +155,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-wrap gap-8"
+              className="flex flex-wrap gap-6 sm:gap-8"
             >
               {stats.map((stat, i) => (
                 <div key={i} className="flex items-center gap-3">
@@ -163,7 +163,7 @@ export function HeroSection() {
                     <stat.icon className="w-5 h-5 text-pink-400" />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-lg">{stat.value}</p>
+                    <p className="text-white font-bold text-base sm:text-lg">{stat.value}</p>
                     <p className="text-white/40 text-xs">{stat.label}</p>
                   </div>
                 </div>
