@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -94,9 +95,68 @@ function SuccessScreen({ title, subtitle, onReset }: { title: string; subtitle: 
 
 // ======================== MAIN PAGE ========================
 export default function AdminPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<AdminTab>("beats");
   const [viewMode, setViewMode] = useState<ViewMode>("add");
   const [success, setSuccess] = useState<{ title: string; subtitle: string } | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [userEmail, setUserEmail] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check authentication on mount
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/admin/auth/verify");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated) {
+            setIsAuthenticated(true);
+            setUserEmail(data.user?.email || "");
+          } else {
+            router.replace("/admin/login");
+            return;
+          }
+        } else {
+          router.replace("/admin/login");
+          return;
+        }
+      } catch {
+        router.replace("/admin/login");
+        return;
+      } finally {
+        setCheckingAuth(false);
+      }
+    }
+    checkAuth();
+  }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth/logout", { method: "POST" });
+      router.replace("/admin/login");
+    } catch {
+      router.replace("/admin/login");
+    }
+  };
+
+  // Show loading while checking auth
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // If not authenticated, redirect (the useEffect handles this)
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (success) {
     return <SuccessScreen title={success.title} subtitle={success.subtitle} onReset={() => setSuccess(null)} />;
@@ -106,7 +166,19 @@ export default function AdminPage() {
     <div className="min-h-screen bg-dark-950 pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/40 hover:text-white text-sm mb-6 transition-colors"><HiArrowLeft className="w-4 h-4" /> Back</Link>
+          <div className="flex items-center justify-between mb-6">
+            <Link href="/" className="inline-flex items-center gap-2 text-white/40 hover:text-white text-sm transition-colors"><HiArrowLeft className="w-4 h-4" /> Back</Link>
+            <div className="flex items-center gap-3">
+              {userEmail && (
+                <span className="text-white/30 text-xs hidden sm:block">{userEmail}</span>
+              )}
+              <button onClick={handleLogout}
+                className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 border border-white/10 text-xs font-medium transition-all"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <HiMusicalNote className="w-8 h-8 text-pink-400" />
