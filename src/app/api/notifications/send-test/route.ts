@@ -61,9 +61,10 @@ export async function POST() {
       })),
       emailStatus: {
         apiKeyConfigured: !!process.env.SENDGRID_API_KEY,
+        fromEmail: process.env.SENDGRID_FROM_EMAIL || "justicezari1@gmail.com (fallback)",
         sentTo: sent,
         failed: failed,
-        note: failed > 0 ? `${failed} emails failed to send` : "All emails sent successfully",
+        note: failed > 0 ? `${failed} emails failed to send - check SendGrid sender verification at https://app.sendgrid.com/settings/sender_auth` : "All emails sent successfully",
       },
     });
   } catch (error) {

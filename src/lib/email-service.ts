@@ -6,8 +6,8 @@
  * To use a different provider, swap the sendEmail function.
  */
 
-const FROM_EMAIL = "noreply@zarryc.com";
-const FROM_NAME = "Zarry C";
+const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || "justicezari1@gmail.com";
+const FROM_NAME = process.env.SENDGRID_FROM_NAME || "Zarry C";
 
 interface EmailPayload {
   to: string;
