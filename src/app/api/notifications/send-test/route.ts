@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSubscribersForNotification, createNotificationEvent, markNotificationSent } from "@/lib/firebase/subscribers";
+import { sendBulkNotifications } from "@/lib/email-service";
 
 export const dynamic = "force-dynamic";
 
@@ -32,26 +33,24 @@ export async function POST() {
 
     // Create notification event in Firestore
     const notificationId = await createNotificationEvent(type, title, message, link);
-    await markNotificationSent(notificationId, allSubscribers.length);
+    
+    // Actually send the emails via SendGrid
+    const { sent, failed } = await sendBulkNotifications(
+      allSubscribers.map(s => ({ email: s.email, name: s.name })),
+      type,
+      title,
+      message,
+      link
+    );
 
-    // Log the sample email content
-    console.log("═══════════════════════════════════════");
-    console.log("📧 SAMPLE EMAIL NOTIFICATION");
-    console.log("═══════════════════════════════════════");
-    console.log(`To: ${allSubscribers.length} subscribers`);
-    console.log(`Subject: ${title}`);
-    console.log(`Body: ${message}`);
-    console.log(`Link: ${link}`);
-    console.log("───────────────────────────────────────");
-    allSubscribers.forEach((s, i) => {
-      console.log(`  ${i + 1}. ${s.name} <${s.email}> [${s.tier}]`);
-    });
-    console.log("═══════════════════════════════════════");
+    await markNotificationSent(notificationId, allSubscribers.length);
 
     return NextResponse.json({
       success: true,
       notificationId,
       recipientCount: allSubscribers.length,
+      sentCount: sent,
+      failedCount: failed,
       title,
       message,
       link,
@@ -60,10 +59,11 @@ export async function POST() {
         email: s.email,
         tier: s.tier,
       })),
-      emailPreview: {
-        subject: title,
-        body: `Hi {name},\n\n${message}\n\nGet tickets: ${link}\n\n— Zarry C`,
-        recipients: allSubscribers.length,
+      emailStatus: {
+        apiKeyConfigured: !!process.env.SENDGRID_API_KEY,
+        sentTo: sent,
+        failed: failed,
+        note: failed > 0 ? `${failed} emails failed to send` : "All emails sent successfully",
       },
     });
   } catch (error) {

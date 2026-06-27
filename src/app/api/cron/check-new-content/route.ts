@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { fetchLatestYouTubeVideos } from "@/lib/social/youtube";
 import { fetchLatestSpotifyReleases } from "@/lib/social/spotify";
 import { fetchLatestSoundCloudTracks } from "@/lib/social/soundcloud";
@@ -10,11 +10,28 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 export const preferredRegion = "auto";
 
-export async function GET() {
+/**
+ * Verify the cron job authorization header.
+ * Vercel automatically adds Authorization: Bearer <CRON_SECRET> to cron invocations.
+ */
+function verifyCronAuth(request: NextRequest): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return true; // Allow if no secret configured (dev mode)
+  const authHeader = request.headers.get("Authorization");
+  return authHeader === `Bearer ${cronSecret}`;
+}
+
+export async function GET(request: NextRequest) {
+  if (!verifyCronAuth(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   return handleCheck();
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  if (!verifyCronAuth(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   return handleCheck();
 }
 
