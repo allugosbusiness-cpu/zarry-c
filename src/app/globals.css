@@ -156,6 +156,67 @@
 ::-webkit-scrollbar-thumb { background: #FF4DA6; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #D10066; }
 
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Mobile tap highlight fix */
+* {
+  -webkit-tap-highlight-color: rgba(255, 77, 166, 0.1);
+}
+
+/* Improved touch targets for mobile */
+@media (max-width: 768px) {
+  button, a, .btn-like {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-center {
+    text-align: center !important;
+  }
+
+  /* Fix overflow on small screens */
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Improve readability on mobile */
+  h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .group:hover .group-hover\:scale-110,
+  .group:hover .group-hover\:opacity-100,
+  .group:hover .group-hover\:text-pink-400 {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  
+  /* Keep the initial state visible on touch */
+  .hover-preview-trigger .preview-content {
+    opacity: 1 !important;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
